@@ -1,19 +1,22 @@
-const fetch = require("node-fetch");
-
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   const response = await fetch("https://identity.passkit.io/connect/token", {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded"
     },
     body: new URLSearchParams({
-      client_id: process.env.CLIENT_ID,
-      client_secret: process.env.CLIENT_SECRET,
+      client_id: "4ESldObW3QiEzdyFsf9LUa",
+      client_secret: "47RCJidZ0P1zOkMnvd6vv3osWVuDcGXtEapcBOpO",
       grant_type: "client_credentials",
       scope: "api"
     })
   });
 
   const data = await response.json();
-  res.status(response.status).json(data);
-};
+
+  if (!response.ok) {
+    return res.status(response.status).json({ error: data });
+  }
+
+  return res.status(200).json(data);
+}
